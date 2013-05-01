@@ -99,7 +99,8 @@ public class Client {
 				from = new String(byte_from).trim();
 				sockInput.read(byte_msg);
 				msg = new String(byte_msg).trim();
-				String fullmsg = String.format("From %0, To %1\r\n%s", from, to, msg);
+				String fullmsg = String.format("From %0, To %1\r\n%s", from,
+						to, msg);
 				System.out.println(fullmsg);
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -134,15 +135,20 @@ public class Client {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			connect(s);
+			// connect(s);
+			connected = true;
 		}
 
 		while (connected) {
 			try {
 				System.out
-						.println("Please enter your commands here or \"quit\" to quit: ");
+						.println("Please enter your commands here or \"help\" for command list: ");
 				s = bufferRead.readLine();
-				command = s.split("\\s+");
+				command = s.split("@|>");
+				// for(int i = 0; i<command.length; i++){
+				// System.out.println(command[i]);
+				// }
+
 				if (command.length == 1) {
 					switch (command[0]) {
 					case "listall":
@@ -154,6 +160,19 @@ public class Client {
 					case "quit":
 						quit();
 						return;
+					case "help":
+						System.out
+								.println("Valid commands are listed as following:\r\n"
+										+ "\tlistall - to list all users.\r\n"
+										+ "\tpost>(message) - to post on your own wall\r\n"
+										+ "\tpost@(username)>(message) - to post on other's wall\r\n"
+										+ "\tshow - to show your own wall\r\n"
+										+ "\tshow@(username) - to show other's wall\r\n"
+										+ "\tquit - to logoff and close the program");
+						break;
+					default:
+						System.out
+								.println("Error, invalid command. Type \"help\" for valid command and formats.");
 					}
 				} else if (command.length == 2) {
 					switch (command[0]) {
@@ -163,13 +182,22 @@ public class Client {
 					case "show":
 						showFrom(command[1]);
 						break;
+					default:
+						System.out
+								.println("Error, invalid command. Type \"help\" for valid command and formats.");
 					}
 				} else if (command.length == 3) {
 					switch (command[0]) {
 					case "post":
 						postOn(command[1], command[2]);
 						break;
+					default:
+						System.out
+								.println("Error, invalid command. Type \"help\" for valid command and formats.");
 					}
+				} else {
+					System.out
+							.println("Error, invalid command. Type \"help\" for valid command and formats.");
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
